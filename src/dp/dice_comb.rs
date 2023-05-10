@@ -6,6 +6,9 @@ pub fn solve(n : isize) -> isize {
 }
 
 pub fn foo(n : isize, idx : usize, memo : &mut Vec<isize>) -> isize {
+    if n <= 6 && n > 0 {
+        return 1 <<(n-1);
+    }
     if n == 0 { return 1; }
 
     if n < 0 || idx == 7 { return 0; }
@@ -14,7 +17,10 @@ pub fn foo(n : isize, idx : usize, memo : &mut Vec<isize>) -> isize {
         return memo[n as usize] 
     }
 
-    memo[n as usize] = (foo(n - idx as isize, idx + 1, memo) + foo(n, idx + 1, memo) ) % 1e9 as isize + 7 ;
+    // Either 
+    // consider current dice `idx` by substracting it from `n` and starting over `idx` 
+    // or consider the following `idx` for current `n`
+    memo[n as usize] = (foo(n - idx as isize, 1, memo) + foo(n, idx + 1, memo) ) % (1e9 as isize + 7) ;
 
     memo[n as usize] 
 }
