@@ -1,3 +1,5 @@
+// TODO learn why it doesn't work when compiling in rust
+
 type Graph<T> = Vec<Vec<T>>;
 
 pub fn solve(input : impl(Iterator<Item = String>), n : usize, m : usize) -> isize {
@@ -38,7 +40,7 @@ pub fn dfs(G : &Graph<char>, vtd : &mut Vec<Vec<bool>>, root : (isize, isize) ) 
 
     vtd[root.0 as usize][root.1 as usize] = true;
 
-    for ady in adyacents(&G, root)
+    for ady in adyacents(G, root)
     {
         if !vtd[ady.0 as usize][ady.1 as usize] 
         {
@@ -49,23 +51,17 @@ pub fn dfs(G : &Graph<char>, vtd : &mut Vec<Vec<bool>>, root : (isize, isize) ) 
 
 
 pub fn adyacents(G: &Graph<char>, root : (isize, isize)) -> Box< dyn Iterator<Item = (isize, isize)> + '_> {
-    let mut candidates = Box::new( vec![ 
-        (root.0 + 1, root.1), 
-        (root.0 - 1, root.1), 
-        (root.0, root.1 + 1), 
-        (root.0, root.1 - 1), 
-        ]) ;
-
-
-
-    Box::new( 
-        candidates
-            .into_iter()
-            .filter( 
+    Box::new (
+        vec![ (root.0 + 1, root.1)
+        , (root.0 - 1, root.1)
+        , (root.0, root.1 + 1)
+        , (root.0, root.1 - 1) 
+        ] .into_iter()
+          .filter( 
                 |(x,y)| 
                     *x >= 0 && *y >= 0 && *x < (G.len() as isize) && *y < (G[0].len() as isize) 
                     && G[*x as usize ][*y as usize] != '#'
-            ) 
+        ) 
     )
 }
 
