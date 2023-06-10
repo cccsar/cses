@@ -9,11 +9,6 @@ mod tree;
 mod math;
 mod string;
 
-
-use templates::*;
-use tree::subordinates::solve;
-
-
 fn main() {
-    
+
 }
