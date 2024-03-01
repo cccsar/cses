@@ -27,12 +27,10 @@ next_state(curr, start, n) -> (int, int , int) {
 
 find_curr(n, k, curr, start) {
     acc := 0;
-    prev_curr:= curr, prev_n:=n, prev_start:= start;
-    while (acc + prev_curr < k) 
+    while (acc + curr < k) 
     {
-        curr:=prev_curr, start:=prev_start, n:=prev_n;
         acc += prev_curr;
-        (prev_curr, prev_start, n) := next_state(curr, start, n);
+        (curr, start, n) := next_state(curr, start, n);
     }
     / Up to here I used curr to reach k
     TODO now I need to use `start` and `curr` to reach its image 
