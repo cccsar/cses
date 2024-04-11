@@ -1,21 +1,20 @@
-// Required modules with problems
 mod templates;
-mod intro;
-mod sort;
-mod dp;
-mod graph;
-mod segtree;
-mod tree;
-mod math;
-mod string;
-mod geometry;
+// Required modules with problems
 
-// use geometry::point_location_test::*;
-use sort::collecting_numbers_2;
+// mod intro;
+mod sort;
+// mod dp;
+// mod graph;
+// mod segtree;
+// mod tree;
+// mod math;
+// mod string;
+// mod geometry;
+
+// TODO use geometry::point_location_test::*;
+// TODO use sort::collecting_numbers_2;
 use templates::*;
 
-use std::io;
-
 fn main() {
-    collecting_numbers_2::run();
+    sort::josephus_problem_1::solve();
 }

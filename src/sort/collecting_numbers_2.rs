@@ -13,10 +13,12 @@ pub fn run() {
         swaps.push( (tmp_vec[0], tmp_vec[1]) );
     }
 
-    solve(&mut nums, &swaps);
+    let resp = solve(&mut nums, &swaps);
+
+    println!("{:?}", resp);
 }
 
-fn solve(nums : &mut Vec<usize>, swaps : &Vec<(usize, usize)> ) -> Vec<usize> {
+fn solve(nums : &mut Vec<usize>, swaps : &Vec<(usize, usize)> ) -> Vec<isize> {
     let N : usize = nums.len();
     
     // for help[idx] idx represent each number in `nums` and `help[idx]` represent
@@ -42,28 +44,77 @@ fn solve(nums : &mut Vec<usize>, swaps : &Vec<(usize, usize)> ) -> Vec<usize> {
         comparisons[idx - 1] = help[idx - 1] < help[idx];
     }
 
-    let mut resp : usize = 1;
+    let mut resp : Vec<isize> = vec![];
+    let mut acc : isize = 1;
 
     println!("dbg: comparisons: {:?}", comparisons);
 
-    comparisons.iter().for_each(|&el| if !el { resp = resp + 1 } );
+    comparisons.iter().for_each(|&el| if !el { acc = acc + 1 } );
 
-    println!("dbg: resp: {resp}");
+    println!("dbg: resp: {acc}");
 
-    for &(u, v) in swaps {
+    for &(u, v) in swaps 
+    {
+        // apply the swap
         let tmp = nums[u-1];
         nums[u-1] = nums[v-1];
         nums[v-1] = tmp;
 
-        help[ nums[u-1] ] = u-1;
-        help[ nums[v-1] ] = v-1;
+        // update help accordingly
+        let i = nums[u-1]; let j = nums[v-1];
 
+        let tmp = help[i-1] ;
+        help[i-1] = help[j-1];
+        help[j-1] = tmp;
 
-        // TODO a lot of logics goes here
+        // minimum check of possible changes in number of passes due to swap
+        for idx in [i-1, i, j-1, j] 
+        {
+            if let Some(val) = helper(&help, idx, &mut comparisons) 
+            { acc = acc + val as isize; }
+        }
+
+        resp.push(acc as isize);
+
+        println!("Checking {u}, {v}:");
+        println!("dbg: nums: {:?}", nums);
+        println!("dbg: helper: {:?}", help);
     }
 
+    return resp;
+}
+    // idx 0 1 2 3 4
+    // val 3 2 1 0 4
 
-    return vec![];
+    // help:
+    // idx 0 1 2 3 4 actual val
+    // val 3 2 1 0 4 actual idx
+
+    // swap(1, 3) .. idxs
+
+    // idx 0 1 2 3 4
+    // val 3 0 1 2 4
+    
+    // help:
+    // idx 0 1 2 3 4 actual val
+    // val 1 2 3 0 4 actual idx
+
+
+pub fn helper(help : &Vec<usize>, idx : usize, comparisons : &mut Vec<bool>) -> Option<isize> {
+    if idx == 0 || idx >= help.len() - 1 { return None; }
+
+    let mut result = 0;
+    let expr = help[idx] < help[idx + 1]; 
+
+    if  expr ^ comparisons[idx] 
+    {
+        if comparisons[idx] { result += 1; }
+        else { result -= 1; } 
+
+        comparisons[idx] = expr;
+    }
+
+    return Some(result);
 }
 
 #[cfg(test)]
